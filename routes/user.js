@@ -3,7 +3,7 @@ const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync");
 const User = require("../models/user.js");
 const passport = require("passport");
-const {saveRedirectUrl} = require("../middleware.js");
+const {saveRedirectUrl, isLoggedIn} = require("../middleware.js");
 
 //New User Route
 router.get("/signup", (req,res)=>{
@@ -55,5 +55,18 @@ router.get("/logout", (req,res,next)=>{
         res.redirect("/listings");
     });
 });
+
+//Profile delete
+router.delete("/deleteUser",isLoggedIn, wrapAsync(async (req,res)=>{
+    res.locals.userId = req.user.id;
+    req.logout((err)=>{
+        if(err){
+            return next(err);
+        }
+    })
+    await User.findByIdAndDelete(res.locals.userId);
+    res.redirect("/listings");
+
+}))
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Listing = require('../models/listing.js');         //Mongoose(MongoDB) Model
+const User = require('../models/user.js');
 const wrapAsync = require("../utils/wrapAsync.js");               //wrapAsync Func. for Async Functions
 const {listingValidate, isLoggedIn, isOwner} = require("../middleware.js");
 const {cloudinary, storage} = require("../cloudConfig.js");
@@ -90,6 +91,9 @@ router.post('/',isLoggedIn, upload.single('listing[image]'), listingValidate, wr
   }).send();
   data.geometry = coordinates.body.features[0].geometry;
   await data.save();
+  let currUser = await User.findById(req.user._id);
+  currUser.lists.push(data);
+  await currUser.save();
   req.flash("success", "New Listing Created Successfully!");
   res.redirect('/listings');
 }));
@@ -106,6 +110,10 @@ router.delete('/:id',isLoggedIn,isOwner,wrapAsync(async (req,res)=>{
       }
     });
   }
+  let currUser = await User.findById(req.user._id);
+  let index = currUser.lists.indexOf(id);
+  currUser.lists.splice(index,1);
+  await currUser.save();
   req.flash("success", "Listing Deleted!");
   res.redirect('/listings');
 }));

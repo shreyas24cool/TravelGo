@@ -48,6 +48,9 @@
           <%}%>
           <% if(currUser) {%>
           <a class="nav-link border-sm border-danger rounded p-sm-2 me-2 fw-semibold" href="/logout">Logout</a>
+          <form method="POST" action="/deleteUser?_method=DELETE">
+            <button type="submit" class="btn btn-outline-danger userdlt">Delete Account</button>
+          </form>
           <% } %>
         </div>
       </div>

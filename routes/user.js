@@ -65,6 +65,7 @@ router.delete("/deleteUser",isLoggedIn, wrapAsync(async (req,res)=>{
         }
     })
     await User.findByIdAndDelete(res.locals.userId);
+    req.flash("success", "Account Deleted Succefully !")
     res.redirect("/listings");
 
 }))

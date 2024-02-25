@@ -19,7 +19,9 @@ let userSchema = new Schema({
 userSchema.plugin(passportLocalMongoose);
 
 userSchema.post("findOneAndDelete", async (user)=>{
-        await Listing.deleteMany({_id : {$in : user.lists}});
+    for(list of user.lists){
+        await Listing.findByIdAndDelete(list);
+    }
 });
 
 let User = mongoose.model("User", userSchema);

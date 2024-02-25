@@ -172,4 +172,10 @@ body{
     .search-btn ,.search-inp{
         display: none !important;
     }
+     
+    .userdlt{
+        border: none !important;
+        padding: 0 !important;
+        font-weight: bold;
+    }
 }
